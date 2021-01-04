@@ -2,13 +2,19 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
-import Secret from "../views/Secret.vue";
+import HomePage from "../views/HomePage.vue";
+import Landing from "../views/Landing.vue";
 import firebase from "firebase/app";
 import "firebase/auth";
 
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: "/",
+    name: "landing",
+    component: Landing,
+  },
   {
     path: "/login",
     name: "login",
@@ -20,9 +26,9 @@ const routes = [
     component: Register,
   },
   {
-    path: "/secret",
-    name: "secret",
-    component: Secret,
+    path: "/home",
+    name: "home",
+    component: HomePage,
     meta: { requiresAuth: true },
   },
 ];

@@ -1,30 +1,36 @@
 <template>
   <div id="app">
-    <topHeader></topHeader>
-    <div id="nav">
-      <router-link to="/register">Register</router-link>|
-      <router-link to="/login">Login</router-link>|
-      <router-link to="/secret">Secret</router-link>
-    </div>
+    <!-- <topHeader></topHeader> -->
     <router-view />
   </div>
 </template>
 
 <script>
-import TopHeader from "./components/TopHeader";
+// import TopHeader from "./components/TopHeader";
 
 export default {
-  components: { topHeader: TopHeader },
+  // components: { topHeader: TopHeader },
 };
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Saira+Condensed&display=swap");
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+
+button {
+  font-family: "Saira Condensed", sans-serif;
+  text-transform: uppercase;
+}
+
+input {
+  padding: 0 10px;
+  border-color: black;
+
+  font-family: "Saira Condensed", sans-serif;
 }
 </style>
