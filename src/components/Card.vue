@@ -36,7 +36,7 @@ export default {
   background: #c6efad;
   min-width: 200px;
   height: 270px;
-  margin: 30px;
+  margin: 10px 30px 40px 30px;
   padding: 10px;
   font-family: "Saira Condensed", sans-serif;
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;

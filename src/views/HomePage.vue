@@ -4,16 +4,32 @@
       <h1>What to eat?</h1>
       <div class="options">
         <input class="search" v-model="search" placeholder="Search..." />
+        <view-list class="list-icon icon-2x" @click="listView = !listView" title="Toggle List" />
       </div>
-      <div class="card-container">
+      <div v-if="!listView" class="card-container">
         <card
-          v-for="(item, index) in this.filteredCategories"
+          v-for="(item, index) in filteredCategories"
           :key="index"
           v-bind:category="item.category"
           v-bind:avgRating="item.avgRating"
           v-bind:items="item.items"
         />
         <add-card type="add" />
+      </div>
+      <div v-else-if="listView">
+        <div class="heading-container">
+          <span class="info">Name</span>
+          <span class="rating">Rating</span>
+          <span class="info">Category </span>
+          <span class="info">Phone</span>
+          <span class="info">Location</span>
+          <span class="info">Website</span>
+        </div>
+        <list-item
+          v-for="(itemKey, index) in itemKeys"
+          :key="index"
+          v-bind:item="allItems[itemKey]"
+        />
       </div>
     </div>
 
@@ -25,16 +41,18 @@ import firebase from "firebase/app";
 import Card from "../components/Card";
 import AddCard from "../components/AddCard";
 import "firebase/database";
+import ViewList from "vue-material-design-icons/ViewList.vue";
+import ListItem from "../components/ListItem";
 
 export default {
   data() {
     return {
-      email: this.$user.email,
-      uid: this.$user.uid,
-      name: this.$user.name,
       categories: [],
       search: "",
       categoryKeys: [],
+      listView: false,
+      allItems: [],
+      itemKeys: [],
     };
   },
   created() {
@@ -60,6 +78,8 @@ export default {
             .once("value")
             .then((snapshot) => {
               const allItems = snapshot.val();
+              this.allItems = snapshot.val();
+              this.itemKeys = Object.keys(allItems);
 
               const result = Object.keys(allItems).map((itemkey) => {
                 if (allItems[itemkey].category === snap.val()[key].category)
@@ -76,7 +96,7 @@ export default {
               const categoryData = {
                 category: snap.val()[key].category,
                 items: itemKeys.length,
-                avgRating: arrAvg,
+                avgRating: arrAvg ? arrAvg : 0,
               };
 
               const updates = {};
@@ -100,6 +120,8 @@ export default {
   components: {
     Card,
     AddCard,
+    ViewList,
+    ListItem,
   },
   methods: {
     async signOut() {
@@ -140,16 +162,56 @@ export default {
 
 h1 {
   font-size: 48px;
-  margin-left: 30px;
 }
 
 .options {
-  margin-left: 30px;
+  display: flex;
+  align-items: center;
 }
 
 .search {
   height: 40px;
   width: 50%;
   font-size: 18px;
+  margin-bottom: 20px;
+  margin-right: 50px;
+}
+
+.list-icon {
+  margin-bottom: 20px;
+}
+
+.material-design-icon.icon-2x {
+  height: 2em;
+  width: 2em;
+}
+
+.material-design-icon.icon-2x:hover {
+  color: #c6efad;
+}
+
+.material-design-icon.icon-2x > .material-design-icon__svg {
+  height: 2em;
+  width: 2em;
+}
+
+.heading-container {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 5px;
+  font-family: "Saira Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.info {
+  flex: 2;
+}
+
+.rating {
+  flex: 1;
 }
 </style>
