@@ -4,6 +4,7 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import HomePage from "../views/HomePage.vue";
 import Landing from "../views/Landing.vue";
+import Category from "../views/Category.vue";
 import firebase from "firebase/app";
 import "firebase/auth";
 
@@ -29,6 +30,12 @@ const routes = [
     path: "/home",
     name: "home",
     component: HomePage,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/home/:id",
+    name: "category",
+    component: Category,
     meta: { requiresAuth: true },
   },
 ];

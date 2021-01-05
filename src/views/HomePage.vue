@@ -7,14 +7,13 @@
       </div>
       <div class="card-container">
         <card
-          v-for="(item, index) in this.filteredItems"
+          v-for="(item, index) in this.filteredCategories"
           :key="index"
           v-bind:category="item.category"
           v-bind:avgRating="item.avgRating"
           v-bind:items="item.items"
-          type="category"
         />
-        <card type="add" />
+        <add-card type="add" />
       </div>
     </div>
 
@@ -24,6 +23,7 @@
 <script>
 import firebase from "firebase/app";
 import Card from "../components/Card";
+import AddCard from "../components/AddCard";
 import "firebase/database";
 
 export default {
@@ -32,8 +32,9 @@ export default {
       email: this.$user.email,
       uid: this.$user.uid,
       name: this.$user.name,
-      items: [],
+      categories: [],
       search: "",
+      categoryKeys: [],
     };
   },
   created() {
@@ -42,17 +43,63 @@ export default {
       .database()
       .ref("/users/" + userId + "/categories");
     dbRefObject.on("value", (snap) => {
-      this.items = Object.values(snap.val());
+      this.categories = Object.values(snap.val());
     });
-    
+
+    // Read Categories to grab category id
+    firebase
+      .database()
+      .ref("/users/" + userId + "/categories")
+      .once("value")
+      .then((snap) => {
+        // For each Category, Read item values to update avg and total items
+        Object.keys(snap.val()).forEach((key) => {
+          firebase
+            .database()
+            .ref("/users/" + userId + "/items")
+            .once("value")
+            .then((snapshot) => {
+              const allItems = snapshot.val();
+
+              const result = Object.keys(allItems).map((itemkey) => {
+                if (allItems[itemkey].category === snap.val()[key].category)
+                  return itemkey;
+              });
+
+              const itemKeys = result.filter((key) => key !== undefined);
+
+              const ratings = itemKeys.map((key) => allItems[key].rating);
+              const arrAvg =
+                ratings.reduce((acc, current) => acc + current, 0) /
+                itemKeys.length;
+
+              const categoryData = {
+                category: snap.val()[key].category,
+                items: itemKeys.length,
+                avgRating: arrAvg,
+              };
+
+              const updates = {};
+              updates["/users/" + userId + "/categories/" + key] = categoryData;
+
+              return firebase
+                .database()
+                .ref()
+                .update(updates);
+            });
+        });
+      });
   },
   computed: {
-    filteredItems: function() {
-      return this.items.filter((item) => item.category.includes(this.search));
+    filteredCategories: function() {
+      return this.categories.filter((item) =>
+        item.category.includes(this.search)
+      );
     },
   },
   components: {
     Card,
+    AddCard,
   },
   methods: {
     async signOut() {
@@ -81,7 +128,7 @@ export default {
 }
 
 .content {
-  min-width: calc(80vw - 80px);
+  width: calc(80vw - 80px);
   min-height: calc(100vh - 80px);
   padding: 40px;
 }
