@@ -28,11 +28,17 @@ export default {
   justify-content: space-evenly;
 }
 
+.item-container span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .info {
-    flex: 2;
+  flex: 2;
 }
 
 .rating {
-    flex: 1;
+  flex: 1;
 }
 </style>

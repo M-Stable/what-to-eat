@@ -12,6 +12,8 @@
         <button class="add-button" @click="showModal = true" ><plus class="icon-2x" title="add item" /></button>
       </div>
 
+      <square-loader :loading="loading" color="black" />
+
       <div class="card-container">
         <item-card
           v-for="(key, index) in this.itemKeys"
@@ -21,7 +23,7 @@
         />
       </div>
 
-      <div v-if="itemKeys.length === 0">
+      <div v-if="itemKeys.length === 0 && !loading">
         <span class="message">
           Hmm... Looks like you have no restaurants yet. Add one by clicking the
           + icon above!
@@ -45,6 +47,7 @@ import AddModal from "../components/AddModal";
 import ItemCard from "../components/ItemCard";
 import ChevronLeft from "vue-material-design-icons/ChevronLeft.vue";
 import Plus from "vue-material-design-icons/Plus.vue";
+import SquareLoader from 'vue-spinner/src/SquareLoader.vue'
 
 export default {
   data() {
@@ -54,6 +57,7 @@ export default {
       items: [],
       itemKeys: [],
       showModal: false,
+      loading: true,
     };
   },
   created() {
@@ -68,6 +72,8 @@ export default {
 
       this.itemKeys = result.filter((key) => key !== undefined);
       this.items = snap.val();
+
+      this.loading = false;
     });
   },
   components: {
@@ -75,6 +81,7 @@ export default {
     ItemCard,
     ChevronLeft,
     Plus,
+    SquareLoader,
   },
 };
 </script>

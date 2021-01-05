@@ -4,8 +4,13 @@
       <h1>What to eat?</h1>
       <div class="options">
         <input class="search" v-model="search" placeholder="Search..." />
-        <view-list class="list-icon icon-2x" @click="listView = !listView" title="Toggle List" />
+        <view-list
+          class="list-icon icon-2x"
+          @click="listView = !listView"
+          title="Toggle List"
+        />
       </div>
+      <square-loader :loading="loading" color="black" />
       <div v-if="!listView" class="card-container">
         <card
           v-for="(item, index) in filteredCategories"
@@ -14,7 +19,7 @@
           v-bind:avgRating="item.avgRating"
           v-bind:items="item.items"
         />
-        <add-card type="add" />
+        <add-card v-if="!loading" type="add" v-bind:categories="categories" />
       </div>
       <div v-else-if="listView">
         <div class="heading-container">
@@ -26,9 +31,9 @@
           <span class="info">Website</span>
         </div>
         <list-item
-          v-for="(itemKey, index) in itemKeys"
+          v-for="(item, index) in filteredItems"
           :key="index"
-          v-bind:item="allItems[itemKey]"
+          v-bind:item="item"
         />
       </div>
     </div>
@@ -43,6 +48,7 @@ import AddCard from "../components/AddCard";
 import "firebase/database";
 import ViewList from "vue-material-design-icons/ViewList.vue";
 import ListItem from "../components/ListItem";
+import SquareLoader from "vue-spinner/src/SquareLoader.vue";
 
 export default {
   data() {
@@ -53,6 +59,7 @@ export default {
       listView: false,
       allItems: [],
       itemKeys: [],
+      loading: true,
     };
   },
   created() {
@@ -62,6 +69,7 @@ export default {
       .ref("/users/" + userId + "/categories");
     dbRefObject.on("value", (snap) => {
       this.categories = Object.values(snap.val());
+      this.loading = false;
     });
 
     // Read Categories to grab category id
@@ -113,7 +121,15 @@ export default {
   computed: {
     filteredCategories: function() {
       return this.categories.filter((item) =>
-        item.category.includes(this.search)
+        item.category.toUpperCase().includes(this.search.toUpperCase())
+      );
+    },
+    filteredItems: function() {
+      return Object.values(this.allItems).filter(
+        (item) =>
+          item.category.toUpperCase().includes(this.search.toUpperCase()) ||
+          item.name.toUpperCase().includes(this.search.toUpperCase()) ||
+          item.location.toUpperCase().includes(this.search.toUpperCase())
       );
     },
   },
@@ -122,6 +138,7 @@ export default {
     AddCard,
     ViewList,
     ListItem,
+    SquareLoader,
   },
   methods: {
     async signOut() {
@@ -205,6 +222,12 @@ h1 {
 
   display: flex;
   justify-content: space-evenly;
+}
+
+.heading-container span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .info {

@@ -1,10 +1,15 @@
 <template>
   <div class="outer">
     <div class="card add-card">
-      <input placeholder="Category Name" v-model="categoryName" />
+      <input
+        placeholder="Category Name"
+        v-model="categoryName"
+        @keyup="enterHandler"
+      />
       <button class="add" @click="addHandler()">
         Add
       </button>
+      <span v-if="error" class="error">This category already exists</span>
     </div>
   </div>
 </template>
@@ -18,12 +23,33 @@ export default {
   data() {
     return {
       categoryName: "",
+      error: false,
     };
   },
+  props: {
+    categories: Array,
+  },
   methods: {
+    enterHandler(e) {
+      if (e.keyCode === 13) {
+        this.addHandler();
+      }
+    },
     //TODO: CHECK FOR UNIQUE CATEGORY
     addHandler() {
       const userId = firebase.auth().currentUser.uid;
+
+      if (
+        this.categories.some(
+          (e) => e.category.toUpperCase() === this.categoryName.toUpperCase()
+        )
+      ) {
+        this.error = true;
+        setTimeout(() => {
+          this.error = false;
+        }, 2000);
+        return;
+      }
 
       const categoryData = {
         category: this.categoryName,
@@ -60,7 +86,7 @@ export default {
   background: #c6efad;
   min-width: 200px;
   height: 270px;
-  margin: 10px 30px 40px 30px;
+  margin: 10px 50px 40px 0;
   padding: 10px;
   font-family: "Saira Condensed", sans-serif;
   border: 3px solid black;
@@ -68,6 +94,7 @@ export default {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  position: relative;
 }
 
 .card:hover {
@@ -107,5 +134,15 @@ export default {
 input {
   font-size: 18px;
   padding: 10px;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  bottom: 5px;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 </style>
