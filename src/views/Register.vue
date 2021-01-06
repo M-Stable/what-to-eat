@@ -1,6 +1,12 @@
 <template>
   <div class="login">
     <div class="content">
+      <router-link to="/">
+        <button class="back-button">
+          <chevron-left class="left-icon" :size="30" /> Back
+        </button>
+      </router-link>
+
       <h1 class="header">Register</h1>
       <form @submit.prevent="pressed">
         <input type="name" v-model="name" placeholder="Full Name" required />
@@ -16,8 +22,14 @@
           placeholder="Password"
           required
         />
-        <button class="loginBtn" type="submit">Register</button>
+        <button class="loginBtn" type="submit">
+          <clip-loader :loading="loading" color="#fff" size="10px" />
+          <span v-if="!loading">Register</span>
+        </button>
       </form>
+      <span v-if="error" class="error"
+        >Account with that email already exists</span
+      >
       <span class="or">or</span>
       <button class="googleBtn" v-on:click="googlePressed" type="submit">
         <img class="googleIcon" src="../icons/google.png" alt="google icon" />
@@ -35,10 +47,13 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
+import ChevronLeft from "vue-material-design-icons/ChevronLeft.vue";
 
 export default {
   methods: {
     async pressed() {
+      this.loading = true;
       try {
         await firebase
           .auth()
@@ -46,9 +61,14 @@ export default {
           .then((user) => {
             user.user.updateProfile({ displayName: this.name });
             this.$router.replace({ name: "home" });
+            this.loading = false;
           });
       } catch (err) {
-        console.log(err);
+        this.loading = false;
+        this.error = true;
+        setTimeout(() => {
+          this.error = false;
+        }, 2000);
       }
     },
     async googlePressed() {
@@ -58,10 +78,15 @@ export default {
         .auth()
         .signInWithPopup(provider)
         .then(() => {
+          this.loading = false;
           this.$router.replace({ name: "home" });
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          this.loading = false;
+          this.error = true;
+          setTimeout(() => {
+            this.error = false;
+          }, 2000);
         });
     },
   },
@@ -70,8 +95,13 @@ export default {
       name: "",
       email: "",
       password: "",
-      error: "",
+      error: false,
+      loading: false,
     };
+  },
+  components: {
+    ClipLoader,
+    ChevronLeft,
   },
 };
 </script>
@@ -149,5 +179,36 @@ button:hover {
   left: 10px;
   top: 50%;
   transform: translate(50%, -50%);
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  border: none;
+  padding-right: 15px;
+  outline: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: white;
+  transition: 0.3s;
+}
+
+.back-button:hover {
+  background: black;
+  color: white;
+  transition: 0.3s;
+}
+
+.left-icon {
+  height: 30px;
+  width: 30px;
 }
 </style>

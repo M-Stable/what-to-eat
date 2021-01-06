@@ -1,6 +1,12 @@
 <template lang="">
   <div class="login">
     <div class="content">
+      <router-link to="/">
+        <button class="back-button">
+          <chevron-left class="left-icon" :size="30" /> Back
+        </button>
+      </router-link>
+
       <h1 class="header">Log In</h1>
       <form @submit.prevent="pressed">
         <input
@@ -15,14 +21,17 @@
           placeholder="Password"
           required
         />
-        <button class="loginBtn" type="submit">Log In</button>
+        <button class="loginBtn" type="submit" :disabled="loading">
+          <clip-loader :loading="loading" color="#fff" size="10px" />
+          <span v-if="!loading">Log In</span>
+        </button>
       </form>
+      <span v-if="error" class="error">Incorrect Email or Password</span>
       <span class="or">or</span>
       <button class="googleBtn" v-on:click="googlePressed" type="submit">
         <img class="googleIcon" src="../icons/google.png" alt="google icon" />
         <span class="buttonText">Continue With Google</span>
       </button>
-      <div v-if="error" class="error">{{ error.message }}</div>
       <span>
         Need an account? Click here to
         <router-link to="/register">register</router-link>
@@ -33,17 +42,25 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/auth";
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
+import ChevronLeft from "vue-material-design-icons/ChevronLeft.vue";
 
 export default {
   methods: {
     async pressed() {
+      this.loading = true;
       try {
         await firebase
           .auth()
           .signInWithEmailAndPassword(this.email, this.password);
+        this.loading = false;
         this.$router.replace({ name: "home" });
       } catch (err) {
-        console.log(err);
+        this.loading = false;
+        this.error = true;
+        setTimeout(() => {
+          this.error = false;
+        }, 3000);
       }
     },
     async googlePressed() {
@@ -54,10 +71,15 @@ export default {
         .signInWithPopup(provider)
         .then(() => {
           /** @type {firebase.auth.OAuthCredential} */
+          this.loading = false;
           this.$router.replace({ name: "home" });
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          this.loading = false;
+          this.error = true;
+          setTimeout(() => {
+            this.error = false;
+          }, 2000);
         });
     },
   },
@@ -65,8 +87,13 @@ export default {
     return {
       email: "",
       password: "",
-      error: "",
+      error: false,
+      loading: false,
     };
+  },
+  components: {
+    ClipLoader,
+    ChevronLeft,
   },
 };
 </script>
@@ -144,5 +171,36 @@ button:hover {
   left: 10px;
   top: 50%;
   transform: translate(50%, -50%);
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  border: none;
+  padding-right: 15px;
+  outline: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: white;
+  transition: 0.3s;
+}
+
+.back-button:hover {
+  background: black;
+  color: white;
+  transition: 0.3s;
+}
+
+.left-icon {
+  height: 30px;
+  width: 30px;
 }
 </style>

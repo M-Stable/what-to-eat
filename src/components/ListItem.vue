@@ -5,7 +5,10 @@
     <span v-if="$mq !== 'mobile'" class="info">{{ item.category }} </span>
     <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info">{{ item.phone }} </span>
     <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info">{{ item.location }}</span>
-    <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info"><a :href="item.website" target="__blank">{{ item.website }}</a></span>
+    <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info">
+      <a v-if="item.website !== 'Unknown'" :href="item.website" target="__blank">{{ item.website }}</a>
+      <span v-else>{{ item.website }}</span>
+    </span>
   </div>
 </template>
 <script>

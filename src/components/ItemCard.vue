@@ -34,6 +34,7 @@
       @close="showModal = false"
       v-bind:item="item"
       v-bind:_key="item.id"
+      v-bind:category="item.category"
       type="Edit"
     />
   </div>

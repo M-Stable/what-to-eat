@@ -5,7 +5,7 @@
     </video>
     <div class="content">
       <h1>Stuck on what to eat?</h1>
-      <h1><span class="header2">Let me help.</span></h1>
+      <h1><span class="header2">Search your list.</span></h1>
       <router-link to="/home"><button>Log In</button></router-link>
     </div>
   </div>

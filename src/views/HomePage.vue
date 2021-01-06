@@ -3,7 +3,7 @@
     <div class="content">
       <h1>What to eat?</h1>
       <div class="options">
-        <input class="search" v-model="search" placeholder="Search..." />
+        <input class="search" v-model="search" placeholder="Search your categories..." />
         <div class="button-group">
           <view-list
             class="list-icon icon-2x"
@@ -243,7 +243,7 @@ h1 {
 .search {
   height: 40px;
   min-width: 200px;
-  width: 50%;
+  width: 60%;
   font-size: 18px;
   margin-bottom: 20px;
 }

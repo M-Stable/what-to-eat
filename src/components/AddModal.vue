@@ -154,6 +154,8 @@ export default {
         .database()
         .ref("users/" + userId + "/items/" + this._key)
         .remove();
+
+      this.$emit("close");
     },
   },
 };

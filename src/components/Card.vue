@@ -34,7 +34,6 @@ export default {
 }
 
 .card {
-  background: #c6efad;
   min-width: 200px;
   flex: 1;
   height: 270px;
