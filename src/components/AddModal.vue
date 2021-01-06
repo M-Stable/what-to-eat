@@ -10,6 +10,7 @@
               <input v-model="location" placeholder="location" />
               <input v-model="phone" placeholder="phone" />
               <input v-model="website" placeholder="website" />
+              <textarea v-model="comment" rows="4" placeholder="comments..." />
               <div class="rating-container">
                 <span class="rating-label">Rating:</span>
                 <div class="rating rating2">
@@ -93,6 +94,7 @@ export default {
       website: "",
       phone: "",
       rating: 0,
+      comment: "",
     };
   },
   props: {
@@ -108,6 +110,7 @@ export default {
       this.website = this.item.website;
       this.phone = this.item.phone;
       this.rating = this.item.rating;
+      this.comment = this.item.comment;
     }
   },
   methods: {
@@ -121,6 +124,7 @@ export default {
         phone: this.phone ? this.phone : "Unknown",
         rating: this.rating ? this.rating : 0,
         category: this.category,
+        comment: this.comment ? this.comment : "",
       };
 
       const newPostKey = firebase
@@ -218,6 +222,22 @@ input {
   width: calc(100% - 25px);
   margin: 10px 0;
   font-size: 1rem;
+}
+
+textarea {
+  width: calc(100% - 25px);
+  margin: 10px 0;
+  font-size: 1rem;
+  resize: none;
+
+  padding: 5px 10px;
+  border: 2px solid black;
+
+  font-family: "Saira Condensed", sans-serif;
+}
+
+textarea:focus {
+  outline: none;
 }
 
 .filled {
