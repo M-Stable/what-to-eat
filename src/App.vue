@@ -1,15 +1,14 @@
 <template>
   <div id="app">
-    <!-- <topHeader></topHeader> -->
     <router-view />
   </div>
 </template>
 
 <script>
-// import TopHeader from "./components/TopHeader";
+
 
 export default {
-  // components: { topHeader: TopHeader },
+
 };
 </script>
 
