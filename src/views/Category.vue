@@ -101,6 +101,10 @@ export default {
 
     // Listen for added Items
     dbRefObject.on("value", (snap) => {
+      if (!snap.val()) {
+        this.loading = false;
+        return;
+      }
       const result = Object.keys(snap.val()).map((key) => {
         if (snap.val()[key].category === this.category) return key;
       });
@@ -116,6 +120,7 @@ export default {
       .ref("/users/" + userId + "/categories")
       .once("value")
       .then((snapshot) => {
+        if (!snapshot.val()) return;
         this.categoryId = Object.keys(snapshot.val()).filter((key) => {
           if (snapshot.val()[key].category === this.category) return key;
         })[0];

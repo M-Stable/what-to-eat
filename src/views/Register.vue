@@ -40,23 +40,29 @@ export default {
   methods: {
     async pressed() {
       try {
-        const user = await firebase
+        await firebase
           .auth()
-          .createUserWithEmailAndPassword(this.email, this.password);
-        firebase
-          .database()
-          .ref("users/" + user.uid)
-          .set({
-            username: this.name,
-            email: user.email,
+          .createUserWithEmailAndPassword(this.email, this.password)
+          .then((user) => {
+            user.user.updateProfile({ displayName: this.name });
+            this.$router.replace({ name: "home" });
           });
-        this.$user.name = this.name;
-        this.$user.uid = user.uid;
-        this.$user.email = user.email;
-        this.$router.replace({ name: "home" });
       } catch (err) {
         console.log(err);
       }
+    },
+    async googlePressed() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(() => {
+          this.$router.replace({ name: "home" });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   data() {

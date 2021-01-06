@@ -38,10 +38,9 @@ export default {
   methods: {
     async pressed() {
       try {
-        const user = await firebase
+        await firebase
           .auth()
           .signInWithEmailAndPassword(this.email, this.password);
-        console.log(user);
         this.$router.replace({ name: "home" });
       } catch (err) {
         console.log(err);
@@ -53,18 +52,8 @@ export default {
       firebase
         .auth()
         .signInWithPopup(provider)
-        .then((result) => {
+        .then(() => {
           /** @type {firebase.auth.OAuthCredential} */
-          var credential = result.credential;
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          var token = credential.accessToken;
-          console.log(token);
-          // The signed-in user info.
-          var user = result.user;
-          console.log(user);
-          this.$user.name = user.displayName;
-          this.$user.uid = user.uid;
-          this.$user.email = user.email;
           this.$router.replace({ name: "home" });
         })
         .catch((error) => {

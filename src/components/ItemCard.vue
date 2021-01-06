@@ -24,9 +24,10 @@
     </div>
     <div class="info">
       <span class="icon"> <open-in-new /> </span>
-      <a class="overflow" :href="item.website" target="__blank">
+      <a v-if="item.website !== 'Unknown'" class="overflow" :href="item.website" target="__blank">
         <h3 class="overflow">{{ item.website }}</h3>
       </a>
+      <h3 v-else class="overflow">{{ item.website }}</h3>
     </div>
     <add-modal
       v-if="showModal"

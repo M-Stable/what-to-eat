@@ -100,7 +100,7 @@ export default {
       .database()
       .ref("/users/" + userId + "/categories");
     dbRefObject.on("value", (snap) => {
-      this.categories = Object.values(snap.val());
+      if (snap.val()) this.categories = Object.values(snap.val());
       this.loading = false;
     });
 
@@ -110,6 +110,7 @@ export default {
       .ref("/users/" + userId + "/categories")
       .once("value")
       .then((snap) => {
+        if (!snap.val()) return;
         // For each Category, Read item values to update avg and total items
         Object.keys(snap.val()).forEach((key) => {
           firebase
