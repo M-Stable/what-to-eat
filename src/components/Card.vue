@@ -1,25 +1,78 @@
 <template>
-  <router-link class="router" :to="'/home/' + category">
-    <div class="card" v-bind:style="{ background: color }">
-      <h2>{{ category }}</h2>
-      <span class="info-text">Items: {{ items }}</span>
-      <span class="info-text">Average Rating: {{ avgRating }}</span>
-    </div>
-  </router-link>
+  <div class="router">
+    <router-link class="router" :to="'/home/' + category">
+      <div class="card" v-bind:style="{ background: color }">
+        <router-link to="/home">
+          <button class="icon-button" @click="showWarning = true">
+            <delete class="icon-2x icon-delete" title="Delete Category" />
+          </button>
+        </router-link>
+        <h2>{{ category }}</h2>
+        <span class="info-text">Items: {{ items }}</span>
+        <span class="info-text">Average Rating: {{ avgRating }}</span>
+      </div>
+    </router-link>
+
+    <warning-modal
+      v-if="showWarning"
+      @close="showWarning = false"
+      v-bind:category="category"
+      v-bind:itemKeys="itemKeys"
+      v-bind:categoryId="categoryId"
+    />
+  </div>
 </template>
 
 <script>
+import Delete from "vue-material-design-icons/Delete.vue";
+import WarningModal from "../components/WarningModal";
+import firebase from "firebase/app";
+import "firebase/database";
+
 export default {
-  data() {
-    return {
-      categoryName: "",
-    };
+  components: {
+    Delete,
+    WarningModal,
   },
   props: {
     category: String,
     avgRating: Number,
     items: Number,
     color: String,
+  },
+  data() {
+    return {
+      showWarning: false,
+      itemKeys: [],
+      categoryId: [],
+    };
+  },
+  created() {
+    const userId = firebase.auth().currentUser.uid;
+
+    firebase
+      .database()
+      .ref("/users/" + userId + "/categories")
+      .once("value")
+      .then((snapshot) => {
+        if (!snapshot.val()) return;
+        this.categoryId = Object.keys(snapshot.val()).filter((key) => {
+          if (snapshot.val()[key].category === this.category) return key;
+        })[0];
+      });
+
+    firebase
+      .database()
+      .ref("/users/" + userId + "/items")
+      .once("value")
+      .then((snapshot) => {
+        if (!snapshot.val()) return;
+        const result = Object.keys(snapshot.val()).map((key) => {
+          if (snapshot.val()[key].category === this.category) return key;
+        });
+
+        this.itemKeys = result.filter((key) => key !== undefined);
+      });
   },
 };
 </script>
@@ -48,6 +101,7 @@ export default {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  position: relative;
 }
 
 .card:hover {
@@ -57,6 +111,10 @@ export default {
   box-shadow: none;
 }
 
+.card:hover .icon-button {
+  opacity: 1;
+}
+
 h2 {
   font-size: 2.5rem;
   margin: 0 0 10px 0;
@@ -64,5 +122,26 @@ h2 {
 
 .info-text {
   font-size: 1.5rem;
+}
+
+.icon-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0;
+
+  font-size: 1rem;
+  border-radius: 100px;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.icon-button:hover {
+  cursor: pointer;
+}
+
+.material-design-icon.icon-delete:hover {
+  color: red;
 }
 </style>

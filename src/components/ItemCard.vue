@@ -1,7 +1,8 @@
 <template lang="">
   <div class="item-card">
     <pencil class="edit-icon" @click="showModal = true" />
-    <h1>{{ item.name }}</h1>
+    <h1 class="overflow">{{ item.name }}</h1>
+
     <div class="rating-container">
       <div
         v-for="(rating, index) in 5"
@@ -24,7 +25,12 @@
     </div>
     <div class="info">
       <span class="icon"> <open-in-new /> </span>
-      <a v-if="item.website !== 'Unknown'" class="overflow" :href="item.website" target="__blank">
+      <a
+        v-if="item.website !== 'Unknown'"
+        class="overflow"
+        :href="item.website"
+        target="__blank"
+      >
         <h3 class="overflow">{{ item.website }}</h3>
       </a>
       <h3 v-else class="overflow">{{ item.website }}</h3>

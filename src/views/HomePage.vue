@@ -3,7 +3,11 @@
     <div class="content">
       <h1>What to eat?</h1>
       <div class="options">
-        <input class="search" v-model="search" placeholder="Search your categories..." />
+        <input
+          class="search"
+          v-model="search"
+          placeholder="Search your categories..."
+        />
         <div class="button-group">
           <view-list
             class="list-icon icon-2x"

@@ -10,14 +10,9 @@
       <div class="header-container">
         <h1>{{ category }}</h1>
 
-        <div class="control-group">
-          <button class="icon-button" @click="showModal = true">
-            <plus class="icon-2x icon-add" title="Add Item" />
-          </button>
-          <button class="icon-button" @click="showWarning = true">
-            <delete class="icon-2x icon-delete" title="Delete Category" />
-          </button>
-        </div>
+        <button class="icon-button control-group" @click="showModal = true">
+          <plus class="icon-2x icon-add" title="Add Item" />
+        </button>
 
         <div class="button-group">
           <label class="sort">Sort By:</label>
@@ -54,14 +49,6 @@
       </div>
     </div>
 
-    <warning-modal
-      v-if="showWarning"
-      @close="showWarning = false"
-      v-bind:category="category"
-      v-bind:itemKeys="itemKeys"
-      v-bind:categoryId="categoryId"
-    />
-
     <add-modal
       v-if="showModal"
       @close="showModal = false"
@@ -75,11 +62,9 @@
 import firebase from "firebase/app";
 import "firebase/database";
 import AddModal from "../components/AddModal";
-import WarningModal from "../components/WarningModal";
 import ItemCard from "../components/ItemCard";
 import ChevronLeft from "vue-material-design-icons/ChevronLeft.vue";
 import Plus from "vue-material-design-icons/Plus.vue";
-import Delete from "vue-material-design-icons/Delete.vue";
 import SquareLoader from "vue-spinner/src/SquareLoader.vue";
 
 export default {
@@ -90,7 +75,6 @@ export default {
       items: [],
       itemKeys: [],
       showModal: false,
-      showWarning: false,
       loading: true,
       nameSort: true,
     };
@@ -152,8 +136,6 @@ export default {
     ChevronLeft,
     Plus,
     SquareLoader,
-    Delete,
-    WarningModal,
   },
 };
 </script>
@@ -188,8 +170,6 @@ h1 {
 }
 
 .icon-button {
-  width: 2rem;
-  height: 2rem;
   font-size: 1rem;
   border-radius: 100px;
   background: transparent;
@@ -246,18 +226,14 @@ h1 {
   color: #c6efad;
 }
 
-.material-design-icon.icon-delete:hover {
-  color: red;
-}
-
 .material-design-icon.icon-2x > .material-design-icon__svg {
-  height: 2em;
-  width: 2em;
+  height: 3em;
+  width: 3em;
 }
 
 .button-group {
   display: flex;
-  margin: 30px 0;
+  margin: 10px 0;
 }
 
 .control-group {
