@@ -30,7 +30,7 @@ const firebaseConfig = {
     rewrites: [
       {
         source: "**",
-        destination: "/index.html",
+        destination: "../public/index.html",
       },
     ],
   },
