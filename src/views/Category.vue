@@ -86,6 +86,7 @@ export default {
     // Listen for added Items
     dbRefObject.on("value", (snap) => {
       if (!snap.val()) {
+        this.itemKeys = [],
         this.loading = false;
         return;
       }

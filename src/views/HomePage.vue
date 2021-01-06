@@ -104,7 +104,11 @@ export default {
       .database()
       .ref("/users/" + userId + "/categories");
     dbRefObject.on("value", (snap) => {
-      if (snap.val()) this.categories = Object.values(snap.val());
+      if (snap.val()) {
+        this.categories = Object.values(snap.val());
+      } else {
+        this.categories = [];
+      }
       this.loading = false;
     });
 
@@ -114,7 +118,9 @@ export default {
       .ref("/users/" + userId + "/categories")
       .once("value")
       .then((snap) => {
-        if (!snap.val()) return;
+        if (!snap.val()) {
+          return;
+        }
         // For each Category, Read item values to update avg and total items
         Object.keys(snap.val()).forEach((key) => {
           firebase
@@ -141,7 +147,7 @@ export default {
               const categoryData = {
                 category: snap.val()[key].category,
                 items: itemKeys.length,
-                avgRating: arrAvg ?  Math.round(arrAvg * 10) / 10 : 0,
+                avgRating: arrAvg ? Math.round(arrAvg * 10) / 10 : 0,
               };
 
               const updates = {};
@@ -162,7 +168,9 @@ export default {
       );
 
       return this.nameSort
-        ? filtered.sort((a, b) => (a.category.toUpperCase() > b.category.toUpperCase() ? 1 : -1))
+        ? filtered.sort((a, b) =>
+            a.category.toUpperCase() > b.category.toUpperCase() ? 1 : -1
+          )
         : filtered.sort((a, b) =>
             a.avgRating < b.avgRating
               ? 1
@@ -182,7 +190,9 @@ export default {
       );
 
       return this.nameSort
-        ? filtered.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1))
+        ? filtered.sort((a, b) =>
+            a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1
+          )
         : filtered.sort((a, b) =>
             a.rating < b.rating
               ? 1
