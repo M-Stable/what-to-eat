@@ -74,12 +74,9 @@ export default {
           this.loading = false;
           this.$router.replace({ name: "home" });
         })
-        .catch(() => {
+        .catch((error) => {
           this.loading = false;
-          this.error = true;
-          setTimeout(() => {
-            this.error = false;
-          }, 2000);
+          console.log(error)
         });
     },
   },
