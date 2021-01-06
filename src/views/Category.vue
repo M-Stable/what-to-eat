@@ -9,17 +9,40 @@
     <div class="content">
       <div class="header-container">
         <h1>{{ category }}</h1>
-        <button class="add-button" @click="showModal = true" ><plus class="icon-2x" title="add item" /></button>
+
+        <div class="control-group">
+          <button class="icon-button" @click="showModal = true">
+            <plus class="icon-2x icon-add" title="Add Item" />
+          </button>
+          <button class="icon-button" @click="showWarning = true">
+            <delete class="icon-2x icon-delete" title="Delete Category" />
+          </button>
+        </div>
+
+        <div class="button-group">
+          <label class="sort">Sort By:</label>
+          <button
+            @click="nameSort = true"
+            v-bind:class="{ 'active-button': nameSort }"
+          >
+            Name
+          </button>
+          <button
+            @click="nameSort = false"
+            v-bind:class="{ 'active-button': !nameSort }"
+          >
+            Rating
+          </button>
+        </div>
       </div>
 
       <square-loader :loading="loading" color="black" />
 
       <div class="card-container">
         <item-card
-          v-for="(key, index) in this.itemKeys"
+          v-for="(item, index) in this.sortedItems"
           :key="index"
-          v-bind:item="items[key]"
-          v-bind:itemKey="key"
+          v-bind:item="item"
         />
       </div>
 
@@ -31,11 +54,19 @@
       </div>
     </div>
 
+    <warning-modal
+      v-if="showWarning"
+      @close="showWarning = false"
+      v-bind:category="category"
+      v-bind:itemKeys="itemKeys"
+      v-bind:categoryId="categoryId"
+    />
+
     <add-modal
       v-if="showModal"
       @close="showModal = false"
       v-bind:category="category"
-      _type="Add"
+      type="Add"
     />
   </div>
 </template>
@@ -44,10 +75,12 @@
 import firebase from "firebase/app";
 import "firebase/database";
 import AddModal from "../components/AddModal";
+import WarningModal from "../components/WarningModal";
 import ItemCard from "../components/ItemCard";
 import ChevronLeft from "vue-material-design-icons/ChevronLeft.vue";
 import Plus from "vue-material-design-icons/Plus.vue";
-import SquareLoader from 'vue-spinner/src/SquareLoader.vue'
+import Delete from "vue-material-design-icons/Delete.vue";
+import SquareLoader from "vue-spinner/src/SquareLoader.vue";
 
 export default {
   data() {
@@ -57,7 +90,9 @@ export default {
       items: [],
       itemKeys: [],
       showModal: false,
+      showWarning: false,
       loading: true,
+      nameSort: true,
     };
   },
   created() {
@@ -75,6 +110,36 @@ export default {
 
       this.loading = false;
     });
+
+    firebase
+      .database()
+      .ref("/users/" + userId + "/categories")
+      .once("value")
+      .then((snapshot) => {
+        this.categoryId = Object.keys(snapshot.val()).filter((key) => {
+          if (snapshot.val()[key].category === this.category) return key;
+        })[0];
+      });
+  },
+  computed: {
+    sortedItems: function() {
+      const itemsWithId = this.itemKeys.map((itemKey) => {
+        return { ...this.items[itemKey], id: itemKey };
+      });
+      const itemValues = Object.values(itemsWithId);
+
+      return this.nameSort
+        ? itemValues.sort((a, b) => (a.name > b.name ? 1 : -1))
+        : itemValues.sort((a, b) =>
+            a.rating < b.rating
+              ? 1
+              : a.rating === b.rating
+              ? a.name > b.name
+                ? 1
+                : -1
+              : -1
+          );
+    },
   },
   components: {
     AddModal,
@@ -82,12 +147,17 @@ export default {
     ChevronLeft,
     Plus,
     SquareLoader,
+    Delete,
+    WarningModal,
   },
 };
 </script>
 <style scoped>
 h1 {
   font-size: 48px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .category-page {
@@ -106,20 +176,24 @@ h1 {
 .header-container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 30px;
 }
 
-.add-button {
+.icon-button {
   width: 2rem;
   height: 2rem;
-  margin-left: 10px;
   font-size: 1rem;
   border-radius: 100px;
   background: transparent;
   border: none;
   outline: none;
+  margin-right: 10px;
 }
 
-.add-button:hover {
+.icon-button:hover {
   cursor: pointer;
 }
 
@@ -163,8 +237,12 @@ h1 {
   width: 3em;
 }
 
-.material-design-icon.icon-2x:hover {
+.material-design-icon.icon-add:hover {
   color: #c6efad;
+}
+
+.material-design-icon.icon-delete:hover {
+  color: red;
 }
 
 .material-design-icon.icon-2x > .material-design-icon__svg {
@@ -172,4 +250,35 @@ h1 {
   width: 2em;
 }
 
+.button-group {
+  display: flex;
+  margin: 30px 0;
+}
+
+.control-group {
+  display: flex;
+  margin-left: -10px;
+}
+
+.sort {
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.active-button {
+  background: black;
+  color: white;
+}
+
+.button-group button {
+  border: none;
+  font-size: 1rem;
+  outline: none;
+}
+
+.button-group button:hover {
+  cursor: pointer;
+}
 </style>

@@ -1,9 +1,9 @@
 <template>
-  <router-link class="router" :to="'/home/' + this.category">
-    <div class="card">
-      <h2>{{ this.category }}</h2>
-      <span class="info-text">Items: {{ this.items }}</span>
-      <span class="info-text">Average Rating: {{ this.avgRating }}</span>
+  <router-link class="router" :to="'/home/' + category">
+    <div class="card" v-bind:style="{ background: color }">
+      <h2>{{ category }}</h2>
+      <span class="info-text">Items: {{ items }}</span>
+      <span class="info-text">Average Rating: {{ avgRating }}</span>
     </div>
   </router-link>
 </template>
@@ -19,6 +19,7 @@ export default {
     category: String,
     avgRating: Number,
     items: Number,
+    color: String,
   },
 };
 </script>
@@ -35,8 +36,10 @@ export default {
 .card {
   background: #c6efad;
   min-width: 200px;
+  flex: 1;
   height: 270px;
-  margin: 10px 50px 40px 0;
+  margin-bottom: 50px;
+  margin-right: 50px;
   padding: 10px;
   font-family: "Saira Condensed", sans-serif;
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;

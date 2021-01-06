@@ -2,10 +2,10 @@
   <div class="item-container">
     <span class="info">{{ item.name }} </span>
     <span class="rating">{{ item.rating }} </span>
-    <span class="info">{{ item.category }} </span>
-    <span class="info">{{ item.phone }} </span>
-    <span class="info">{{ item.location }}</span>
-    <span class="info">{{ item.website }}</span>
+    <span v-if="$mq !== 'mobile'" class="info">{{ item.category }} </span>
+    <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info">{{ item.phone }} </span>
+    <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info">{{ item.location }}</span>
+    <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info"><a :href="item.website" target="__blank">{{ item.website }}</a></span>
   </div>
 </template>
 <script>
@@ -18,6 +18,7 @@ export default {
 <style scoped>
 .item-container {
   width: calc(100% - 20px);
+  min-width: 200px;
   border: 3px solid black;
   padding: 10px;
   margin: 5px;

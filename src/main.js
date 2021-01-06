@@ -3,9 +3,19 @@ import App from "./App.vue";
 import router from "./router";
 import axios from "axios";
 import firebase from "firebase/app";
+import VueMq from 'vue-mq'
 
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
+
+Vue.use(VueMq, {
+  breakpoints: {
+    mobile: 450,
+    tablet: 900,
+    laptop: 1250,
+    desktop: Infinity,
+  }
+})
 
 const firebaseConfig = {
   apiKey: "AIzaSyAu36cu6UWFg7l-4XBnfgj3cOQ-ydeTRis",
@@ -21,19 +31,10 @@ firebase.initializeApp(firebaseConfig);
 
 let app;
 
-const shared = {
-  name: "TESTERINO",
-}
-
-Vue.prototype.$user = {};
-
 firebase.auth().onAuthStateChanged(() => {
   if (!app) {
     app = new Vue({
       router,
-      data: {
-        shared,
-      },
       render: (h) => h(App),
     }).$mount("#app");
   }

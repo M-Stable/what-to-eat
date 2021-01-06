@@ -54,7 +54,11 @@
                 <button type="submit" class="add">
                   {{ type === "Add" ? "Add" : "Edit" }}
                 </button>
-                <button @click="deleteHandler" v-if="(type === 'Edit')" class="delete">
+                <button
+                  @click="deleteHandler"
+                  v-if="type === 'Edit'"
+                  class="delete"
+                >
                   Delete
                 </button>
                 <button
@@ -89,26 +93,22 @@ export default {
       website: "",
       phone: "",
       rating: 0,
-      type: "",
     };
   },
   props: {
     category: String,
-    _name: String,
-    _location: String,
-    _website: String,
-    _phone: String,
-    _rating: Number,
-    _type: String,
+    item: Object,
+    type: String,
     _key: String,
   },
   created() {
-    this.name = this._name;
-    this.location = this._location;
-    this.website = this._website;
-    this.phone = this._phone;
-    this.rating = this._rating;
-    this.type = this._type;
+    if (this.item) {
+      this.name = this.item.name;
+      this.location = this.item.location;
+      this.website = this.item.website;
+      this.phone = this.item.phone;
+      this.rating = this.item.rating;
+    }
   },
   methods: {
     pressed() {
@@ -116,10 +116,10 @@ export default {
 
       const itemData = {
         name: this.name,
-        location: this.location,
-        website: this.website,
-        phone: this.phone,
-        rating: this.rating,
+        location: this.location ? this.location : "Unknown",
+        website: this.website ? this.website : "Unknown",
+        phone: this.phone ? this.phone : "Unknown",
+        rating: this.rating ? this.rating : 0,
         category: this.category,
       };
 
@@ -141,7 +141,7 @@ export default {
         .ref()
         .update(updates);
 
-      this.$emit('close')
+      this.$emit("close");
       this.removeHash();
     },
     removeHash() {
@@ -153,7 +153,7 @@ export default {
       firebase
         .database()
         .ref("users/" + userId + "/items/" + this._key)
-        .remove()
+        .remove();
     },
   },
 };

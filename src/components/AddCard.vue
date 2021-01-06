@@ -35,7 +35,6 @@ export default {
         this.addHandler();
       }
     },
-    //TODO: CHECK FOR UNIQUE CATEGORY
     addHandler() {
       const userId = firebase.auth().currentUser.uid;
 
@@ -86,7 +85,8 @@ export default {
   background: #c6efad;
   min-width: 200px;
   height: 270px;
-  margin: 10px 50px 40px 0;
+  margin-bottom: 50px;
+  margin-right: 50px;
   padding: 10px;
   font-family: "Saira Condensed", sans-serif;
   border: 3px solid black;

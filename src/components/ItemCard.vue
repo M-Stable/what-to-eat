@@ -31,14 +31,9 @@
     <add-modal
       v-if="showModal"
       @close="showModal = false"
-      v-bind:category="item.category"
-      v-bind:_name="item.name"
-      v-bind:_location="item.location"
-      v-bind:_rating="item.rating"
-      v-bind:_phone="item.phone"
-      v-bind:_website="item.website"
-      v-bind:_key="itemKey"
-      _type="Edit"
+      v-bind:item="item"
+      v-bind:_key="item.id"
+      type="Edit"
     />
   </div>
 </template>
@@ -72,9 +67,11 @@ export default {
 .item-card {
   border: 3px solid black;
   width: 270px;
+  min-width: 200px;
   padding: 10px;
   font-family: "Saira Condensed", sans-serif;
   margin-right: 30px;
+  margin-bottom: 30px;
   position: relative;
 }
 
