@@ -25,15 +25,6 @@ const firebaseConfig = {
   storageBucket: "what-to-eat-fe48a.appspot.com",
   messagingSenderId: "199142113995",
   appId: "1:199142113995:web:d2c58faa700ea30be0914e",
-  hosting: {
-    public: "dist",
-    rewrites: [
-      {
-        source: "**",
-        destination: "../public/index.html",
-      },
-    ],
-  },
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
