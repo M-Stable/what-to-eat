@@ -141,7 +141,7 @@ export default {
               const categoryData = {
                 category: snap.val()[key].category,
                 items: itemKeys.length,
-                avgRating: arrAvg ? arrAvg : 0,
+                avgRating: arrAvg ?  Math.round(arrAvg * 10) / 10 : 0,
               };
 
               const updates = {};

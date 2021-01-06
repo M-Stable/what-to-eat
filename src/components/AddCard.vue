@@ -6,7 +6,7 @@
         v-model="categoryName"
         @keyup="enterHandler"
       />
-      <button class="add" @click="addHandler()">
+      <button class="add" @click="addHandler()" :disabled="categoryName === ''">
         Add
       </button>
       <span v-if="error" class="error">This category already exists</span>
@@ -131,9 +131,19 @@ export default {
   color: black;
 }
 
+.add:disabled {
+  border-color: rgb(65, 65, 65);
+  background: rgb(65, 65, 65);
+  pointer-events: none;
+}
+
 input {
   font-size: 18px;
   padding: 10px;
+}
+
+input:focus {
+  outline: none;
 }
 
 .error {
