@@ -97,9 +97,9 @@ export default {
   margin-right: 50px;
   padding: 10px;
   font-family: "Saira Condensed", sans-serif;
-  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
   border: 3px solid black;
   transition: 0.3s;
+  box-shadow: none;
 
   display: flex;
   justify-content: center;
@@ -108,10 +108,11 @@ export default {
 }
 
 .card:hover {
-  transform: translate(10px, 10px);
+  transform: translate(-10px, -10px);
   transition: 0.3s;
   background: #adefdb;
-  box-shadow: none;
+
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
 .card:hover .icon-button {

@@ -3,10 +3,19 @@
     <span class="info">{{ item.name }} </span>
     <span class="rating">{{ item.rating }} </span>
     <span v-if="$mq !== 'mobile'" class="info">{{ item.category }} </span>
-    <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info">{{ item.phone }} </span>
-    <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info">{{ item.location }}</span>
+    <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info"
+      >{{ item.phone }}
+    </span>
+    <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info">{{
+      item.location
+    }}</span>
     <span v-if="$mq !== 'mobile' && $mq !== 'tablet'" class="info">
-      <a v-if="item.website !== 'Unknown'" :href="item.website" target="__blank">{{ item.website }}</a>
+      <a
+        v-if="item.website !== 'Unknown'"
+        :href="link"
+        target="__blank"
+        >{{ item.website }}</a
+      >
       <span v-else>{{ item.website }}</span>
     </span>
   </div>
@@ -15,6 +24,13 @@
 export default {
   props: {
     item: Object,
+  },
+  computed: {
+    link() {
+      return this.item.website.startsWith("http://") || this.item.website.startsWith("https://")
+        ? this.item.website
+        : `//${this.item.website}`;
+    },
   },
 };
 </script>

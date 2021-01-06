@@ -28,7 +28,7 @@
       <a
         v-if="item.website !== 'Unknown'"
         class="overflow"
-        :href="item.website"
+        :href="link"
         target="__blank"
       >
         <h3 class="overflow">{{ item.website }}</h3>
@@ -68,6 +68,14 @@ export default {
     return {
       showModal: false,
     };
+  },
+  computed: {
+    link() {
+      return this.item.website.startsWith("http://") ||
+        this.item.website.startsWith("https://")
+        ? this.item.website
+        : `//${this.item.website}`;
+    },
   },
 };
 </script>

@@ -306,10 +306,10 @@ textarea:focus {
   transition: 0.3s;
 }
 
-.add:hover {
+.add:hover,
+.cancel:hover,
+.delete:hover {
   cursor: pointer;
-  background: white;
-  color: black;
 }
 
 .delete {
@@ -319,22 +319,10 @@ textarea:focus {
   margin-left: 10px;
 }
 
-.delete:hover {
-  cursor: pointer;
-  background: white;
-  color: black;
-}
-
 .cancel {
   background: white;
   color: black;
   flex: 0.5;
   margin-left: 10px;
-}
-
-.cancel:hover {
-  cursor: pointer;
-  background: black;
-  color: white;
 }
 </style>

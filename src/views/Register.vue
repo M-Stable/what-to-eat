@@ -160,7 +160,7 @@ input {
 .googleBtn {
   border: 3px solid black;
   width: 100%;
-  font-size: 36px;
+  font-size: 1.5rem;
   background: transparent;
   padding: 0 30px;
   margin: 30px;
