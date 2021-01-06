@@ -7,7 +7,10 @@
             <delete class="icon-2x icon-delete" title="Delete Category" />
           </button>
         </router-link>
-        <h2>{{ category }}</h2>
+        <div class="title">
+          <h2 class="overflow">{{ category }}</h2>
+        </div>
+
         <span class="info-text">Items: {{ items }}</span>
         <span class="info-text">Average Rating: {{ avgRating }}</span>
       </div>
@@ -115,6 +118,10 @@ export default {
   opacity: 1;
 }
 
+.title {
+  width: 200px;
+}
+
 h2 {
   font-size: 2.5rem;
   margin: 0 0 10px 0;
@@ -143,5 +150,11 @@ h2 {
 
 .material-design-icon.icon-delete:hover {
   color: red;
+}
+
+.overflow {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

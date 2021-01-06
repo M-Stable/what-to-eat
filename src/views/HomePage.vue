@@ -162,12 +162,12 @@ export default {
       );
 
       return this.nameSort
-        ? filtered.sort((a, b) => (a.category > b.category ? 1 : -1))
+        ? filtered.sort((a, b) => (a.category.toUpperCase() > b.category.toUpperCase() ? 1 : -1))
         : filtered.sort((a, b) =>
             a.avgRating < b.avgRating
               ? 1
               : a.avgRating === b.avgRating
-              ? a.category > b.category
+              ? a.category.toUpperCase() > b.category.toUpperCase()
                 ? 1
                 : -1
               : -1
@@ -182,12 +182,12 @@ export default {
       );
 
       return this.nameSort
-        ? filtered.sort((a, b) => (a.name > b.name ? 1 : -1))
+        ? filtered.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1))
         : filtered.sort((a, b) =>
             a.rating < b.rating
               ? 1
               : a.rating === b.rating
-              ? a.name > b.name
+              ? a.name.toUpperCase() > b.name.toUpperCase()
                 ? 1
                 : -1
               : -1
