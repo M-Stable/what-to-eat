@@ -82,7 +82,7 @@ export default {
 }
 
 .item-card:hover .filled {
-  background: #c6efad;
+  background: rgb(250, 192, 2);
   transition: 0.8s ease-in-out;
 }
 
