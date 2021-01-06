@@ -6,7 +6,7 @@
         <input
           class="search"
           v-model="search"
-          placeholder="Search your categories..."
+          placeholder="Search your categories/restaurants..."
         />
         <div class="button-group">
           <view-list
