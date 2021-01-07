@@ -38,9 +38,15 @@
           v-bind:category="item.category"
           v-bind:avgRating="item.avgRating"
           v-bind:items="item.items"
-          v-bind:color="colors[index % 8]"
+          v-bind:color="item.color"
+          v-bind:categoryId="item.id"
         />
-        <add-card v-if="!loading" type="add" v-bind:categories="categories" />
+        <add-card
+          v-if="!loading"
+          type="add"
+          v-bind:categories="categories"
+          v-bind:index="categories.length"
+        />
       </div>
       <div v-else-if="listView">
         <div class="heading-container">
@@ -80,7 +86,6 @@ import "firebase/database";
 import ViewList from "vue-material-design-icons/ViewList.vue";
 import ListItem from "../components/ListItem";
 import SquareLoader from "vue-spinner/src/SquareLoader.vue";
-import { COLORS } from "../helpers/colors.js";
 
 export default {
   data() {
@@ -93,7 +98,6 @@ export default {
       itemKeys: [],
       loading: true,
       nameSort: true,
-      colors: COLORS,
       username: "",
     };
   },
@@ -129,6 +133,7 @@ export default {
             .once("value")
             .then((snapshot) => {
               const allItems = snapshot.val();
+              if (!allItems) return;
               this.allItems = snapshot.val();
               this.itemKeys = Object.keys(allItems);
 
@@ -148,6 +153,8 @@ export default {
                 category: snap.val()[key].category,
                 items: itemKeys.length,
                 avgRating: arrAvg ? Math.round(arrAvg * 10) / 10 : 0,
+                color:  snap.val()[key].color,
+                id:  snap.val()[key].id,
               };
 
               const updates = {};

@@ -18,6 +18,7 @@
 import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
+import { COLORS } from "../helpers/colors.js";
 
 export default {
   data() {
@@ -28,6 +29,7 @@ export default {
   },
   props: {
     categories: Array,
+    index: Number,
   },
   methods: {
     enterHandler(e) {
@@ -50,17 +52,19 @@ export default {
         return;
       }
 
-      const categoryData = {
-        category: this.categoryName,
-        items: 0,
-        avgRating: 0,
-      };
-
       const newPostKey = firebase
         .database()
         .ref("users/" + userId)
         .child("categories")
         .push().key;
+
+      const categoryData = {
+        category: this.categoryName,
+        items: 0,
+        avgRating: 0,
+        color: COLORS[this.index % 8],
+        id: newPostKey,
+      };
 
       const updates = {};
       updates["users/" + userId + "/categories/" + newPostKey] = categoryData;

@@ -20,7 +20,6 @@
       v-if="showWarning"
       @close="showWarning = false"
       v-bind:category="category"
-      v-bind:itemKeys="itemKeys"
       v-bind:categoryId="categoryId"
     />
   </div>
@@ -29,8 +28,6 @@
 <script>
 import Delete from "vue-material-design-icons/Delete.vue";
 import WarningModal from "../components/WarningModal";
-import firebase from "firebase/app";
-import "firebase/database";
 
 export default {
   components: {
@@ -42,40 +39,12 @@ export default {
     avgRating: Number,
     items: Number,
     color: String,
+    categoryId: String,
   },
   data() {
     return {
       showWarning: false,
-      itemKeys: [],
-      categoryId: [],
     };
-  },
-  created() {
-    const userId = firebase.auth().currentUser.uid;
-
-    firebase
-      .database()
-      .ref("/users/" + userId + "/categories")
-      .once("value")
-      .then((snapshot) => {
-        if (!snapshot.val()) return;
-        this.categoryId = Object.keys(snapshot.val()).filter((key) => {
-          if (snapshot.val()[key].category === this.category) return key;
-        })[0];
-      });
-
-    firebase
-      .database()
-      .ref("/users/" + userId + "/items")
-      .once("value")
-      .then((snapshot) => {
-        if (!snapshot.val()) return;
-        const result = Object.keys(snapshot.val()).map((key) => {
-          if (snapshot.val()[key].category === this.category) return key;
-        });
-
-        this.itemKeys = result.filter((key) => key !== undefined);
-      });
   },
 };
 </script>

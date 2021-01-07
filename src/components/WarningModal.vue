@@ -35,7 +35,11 @@ export default {
   props: {
     category: String,
     categoryId: String,
-    itemKeys: Array,
+  },
+  data() {
+    return {
+      itemKeys: [],
+    };
   },
   methods: {
     deleteHandler() {
@@ -46,12 +50,35 @@ export default {
         .ref("users/" + userId + "/categories/" + this.categoryId)
         .remove();
 
-      this.itemKeys.forEach((key) => {
-        firebase
-          .database()
-          .ref("users/" + userId + "/items/" + key)
-          .remove();
-      });
+      // firebase
+      //   .database()
+      //   .ref("/users/" + userId + "/categories")
+      //   .once("value")
+      //   .then((snapshot) => {
+      //     this.categoryId = Object.keys(snapshot.val()).filter((key) => {
+      //       if (snapshot.val()[key].category === this.category) return key;
+      //     })[0];
+      //   });
+
+      firebase
+        .database()
+        .ref("/users/" + userId + "/items")
+        .once("value")
+        .then((snapshot) => {
+          if (!snapshot.val()) return;
+          const result = Object.keys(snapshot.val()).map((key) => {
+            if (snapshot.val()[key].category === this.category) return key;
+          });
+
+          const itemKeys = result.filter((key) => key !== undefined);
+
+          itemKeys.forEach((key) => {
+            firebase
+              .database()
+              .ref("users/" + userId + "/items/" + key)
+              .remove();
+          });
+        });
 
       this.$emit("close");
     },
